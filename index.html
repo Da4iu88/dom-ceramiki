@@ -166,19 +166,18 @@
   .btn-outline:hover { background: var(--clay-lt); text-decoration: none; }
 
   .hero-visual {
-    background: var(--clay-lt);
     border-radius: var(--radius);
-    border: 1px solid var(--border);
     aspect-ratio: 4/3;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    gap: 12px;
-    color: var(--clay);
+    overflow: hidden; /* Zapewnia, że zdjęcie nie wychodzi poza zaokrąglone rogi */
   }
-  .hero-visual svg { opacity: 0.35; }
-  .hero-visual p { font-size: 0.8rem; color: var(--muted); font-style: italic; }
+  .hero-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   /* ─── WORKSHOPS STRIP ─── */
   .strip {
@@ -493,6 +492,7 @@
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="#top">
@@ -508,6 +508,7 @@
   </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero" id="top">
   <div class="hero-inner">
     <div>
@@ -519,18 +520,14 @@
         <a href="#warsztaty" class="btn-outline">Zobacz terminy</a>
       </div>
     </div>
+    <!-- ZDJĘCIE ZAMIAST PLACEHOLDERA -->
     <div class="hero-visual">
-      <svg width="72" height="72" fill="none" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="36" cy="38" rx="22" ry="10" stroke="#C96B3A" stroke-width="2.5"/>
-        <path d="M14 38 C14 50 58 50 58 38" stroke="#C96B3A" stroke-width="2.5" fill="none"/>
-        <path d="M36 28 C36 20 28 16 28 24" stroke="#C96B3A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <circle cx="36" cy="38" r="4" fill="#C96B3A" opacity="0.4"/>
-      </svg>
-      <p>Tu pojawi się Wasze zdjęcie z pracowni</p>
+      <img src="https://images.unsplash.com/photo-1565193566173-7a0cb3d90403?auto=format&fit=crop&w=800&q=80" alt="Zdjęcie glinianych naczyń na kole garncarskim">
     </div>
   </div>
 </section>
 
+<!-- EVENTS STRIP -->
 <div class="strip">
   <div class="strip-inner">
     <div class="strip-label">Najbliższe warsztaty</div>
@@ -540,6 +537,7 @@
   </div>
 </div>
 
+<!-- WARSZTATY -->
 <section id="warsztaty">
   <div class="container">
     <span class="section-tag">Harmonogram</span>
@@ -552,6 +550,7 @@
   </div>
 </section>
 
+<!-- ZAPIS FORM -->
 <section id="zapis">
   <div class="container">
     <span class="section-tag">Formularz zapisu</span>
@@ -596,6 +595,7 @@
   </div>
 </section>
 
+<!-- DOŁĄCZ -->
 <section id="dolacz">
   <div class="container">
     <span class="section-tag">Społeczność</span>
@@ -608,7 +608,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         </div>
         <h3>Wytwórca</h3>
-        <p>Masz czas raz w tygodniu i chcesz lepiać? Poszukujemy osób, które stworzą wyroby sprzedawane na kiermasach i w internetowe. Nie musisz mieć doświadczenia.</p>
+        <p>Masz czas raz w tygodniu i chcesz lepiać? Poszukujemy osób, które stworzą wyroby sprzedawane na kiermasach i w internecie. Nie musisz mieć doświadczenia.</p>
         <br>
         <a href="#kontakt" class="btn-outline" style="font-size:0.85rem; padding:8px 20px;">Napisz do nas</a>
       </div>
@@ -617,7 +617,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
         <h3>Wolontariusz</h3>
-        <p>Może pomóc przy organizacji warsztatów, social mediach, logistyce kiermaszy albo obsłudze gości. Każde ręce się przydają — nawet na kilka godzin w miesiącu.</p>
+        <p>Możesz pomóc przy organizacji warsztatów, social mediach, logistyce kiermaszy albo obsłudze gości. Każde ręce się przydają — nawet na kilka godzin w miesiącu.</p>
         <br>
         <a href="#kontakt" class="btn-outline" style="font-size:0.85rem; padding:8px 20px;">Napisz do nas</a>
       </div>
@@ -634,6 +634,7 @@
   </div>
 </section>
 
+<!-- O NAS -->
 <section id="onas">
   <div class="container">
     <div class="onas-inner">
@@ -641,34 +642,83 @@
         <span class="section-tag">O nas</span>
         <h2>Garncarnię robimy razem</h2>
         <p style="margin-bottom:1rem;">Dom Ceramiki Zatorze to społeczna pracownia garncarska działająca przy parafii w Olsztynie. Powstała z prostego przekonania: rękodzieło łączy ludzi i daje realną radość tworzenia — niezależnie od wieku i umiejętności.</p>
-        <p style="margin-bottom:1rem;">Wyroby z pracowni trafiają na kiermasze parafialne, pod kościoł po mszy i do zamówień indywidualnych. Każda złotówka wraca do wspólnoty — na glinę, szkliwa i kolejne warsztaty.</p>
+        <p style="margin-bottom:1rem;">Wyroby z pracowni trafiają na kiermasze parafialne, pod kościół po mszy i do zamówień indywidualnych. Każda złotówka wraca do wspólnoty — na glinę, szkliwa i kolejne warsztaty.</p>
         <p>Chcemy być w pełni samowystarczalni: od organizacji, przez angażowanie parafian, po zdolność do samodzielnego finansowania się z wyrobów i zajęć.</p>
       </div>
       <div>
         <h3 style="margin-bottom:0.5rem; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); font-family:'Nunito',sans-serif;">Nasz zespół</h3>
+        
+        <!-- ========================================== -->
+        <!-- TUTAJ MOŻESZ EDYTOWAĆ KAFELKI Z ZESPOŁEM -->
+        <!-- ========================================== -->
         <div class="team-grid">
+          
+          <!-- Osoba 1 -->
           <div class="team-card">
-            <div class="team-avatar">Ew</div>
-            <div><div class="team-name">Ewa</div><div class="team-role">Prowadząca pracownię</div></div>
+            <!-- Skrót w kółku (2 litery) -->
+            <div class="team-avatar">Ew</div> 
+            <div>
+              <div class="team-name">Ewa</div>
+              <div class="team-role">Prowadząca pracownię</div>
+            </div>
           </div>
+          
+          <!-- Osoba 2 -->
           <div class="team-card">
             <div class="team-avatar">El</div>
-            <div><div class="team-name">Eleonora</div><div class="team-role">Szkolenia i warsztaty</div></div>
+            <div>
+              <div class="team-name">Eleonora</div>
+              <div class="team-role">Szkolenia i warsztaty</div>
+            </div>
           </div>
+          
+          <!-- Osoba 3 -->
           <div class="team-card">
             <div class="team-avatar">An</div>
-            <div><div class="team-name">Ania</div><div class="team-role">Weekendy i produkcja</div></div>
+            <div>
+              <div class="team-name">Ania</div>
+              <div class="team-role">Weekendy i produkcja</div>
+            </div>
           </div>
+          
+          <!-- Osoba 4 -->
           <div class="team-card">
             <div class="team-avatar">Ka</div>
-            <div><div class="team-name">Kasia</div><div class="team-role">Zbiórka i logistyka</div></div>
+            <div>
+              <div class="team-name">Kasia</div>
+              <div class="team-role">Zbiórka i logistyka</div>
+            </div>
           </div>
+
+          <!-- Osoba 5 -->
+          <div class="team-card">
+            <div class="team-avatar">To</div>
+            <div>
+              <div class="team-name">Tomasz</div>
+              <div class="team-role">Wypał i piece</div>
+            </div>
+          </div>
+
+          <!-- Osoba 6 -->
+          <div class="team-card">
+            <div class="team-avatar">Ag</div>
+            <div>
+              <div class="team-name">Agnieszka</div>
+              <div class="team-role">Promocja i kiermasze</div>
+            </div>
+          </div>
+
         </div>
+        <!-- ========================================== -->
+        <!-- KONIEC KAFELKÓW Z ZESPOŁEM -->
+        <!-- ========================================== -->
+
       </div>
     </div>
   </div>
 </section>
 
+<!-- KONTAKT -->
 <section id="kontakt">
   <div class="container">
     <span class="section-tag">Kontakt</span>
@@ -726,6 +776,7 @@
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <span class="footer-logo">Dom Ceramiki Zatorze</span>

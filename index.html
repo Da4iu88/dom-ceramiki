@@ -521,7 +521,8 @@
       </div>
     </div>
     <div class="hero-visual">
-      <img src="https://images.pexels.com/photos/3815418/pexels-photo-3815418.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Praca z gliną w pracowni ceramicznej">
+      <!-- Obrazek dostaje id="hero-img-element", dzięki czemu JavaScript podmieni jego źródło -->
+      <img id="hero-img-element" src="https://images.pexels.com/photos/3815418/pexels-photo-3815418.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Praca z gliną w pracowni ceramicznej">
     </div>
   </div>
 </section>
@@ -739,7 +740,7 @@
 
         <div class="info-row">
           <div class="info-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.58a16 16 0 0 0 6 6l.46-.46a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.58a16 16 0 0 0 6 6l.46-.46a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.18 16.92z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.58a16 16 0 0 0 6 6l.46-.46a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.18 16.92z"/></svg>
           </div>
           <div>
             <div class="info-label">Telefon / WhatsApp</div>
@@ -785,6 +786,21 @@
 // ==========================================
 const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6bm5WYoi6S3CAtrgnkNdopn16aSgEvMuziEG4nYKbKn9DNTS3WNVaybrtQZNdb-wyPoWwkXQHL8rv/pub?output=csv'; 
 
+// ==========================================
+// KONTROLA ZDJĘCIA GŁÓWNEGO Z GOOGLE DRIVE
+// ==========================================
+// Jeśli chcesz sterować zdjęciem z Google Drive:
+// 1. Wrzuć zdjęcie na Drive, ustaw udostępnianie jako "Każda osoba mająca link".
+// 2. Skopiuj link i wyciągnij z niego długie ID pliku.
+// 3. Wklej to ID poniżej (między cudzysłowy). Jeśli zostawisz puste, załaduje się zdjęcie domyślne.
+const GOOGLE_DRIVE_HERO_IMAGE_ID = 'https://lh3.googleusercontent.com/u/0/d/1k8x3qX34mg-eW3X_ot8F39hKbRwSXqmB'; 
+
+if (GOOGLE_DRIVE_HERO_IMAGE_ID && GOOGLE_DRIVE_HERO_IMAGE_ID.trim() !== '') {
+  document.getElementById('hero-img-element').src = 'https://lh3.googleusercontent.com/u/0/d/' + GOOGLE_DRIVE_HERO_IMAGE_ID;
+}
+
+
+// Rezerwowe dane demonstracyjne
 const fallbackData = [
   { Dzien_Tygodnia_i_Data: "Sobota, 14 czerwca 2026", Skrot_Daty: "Sob. 14 cze", Godziny: "10:00 – 12:00", Tytul: "Warsztaty rodzinne — odciski roślin", Odbiorcy: "Dla rodzin z dziećmi", Prowadzacy: "Ewa", Wolne_Miejsca: "5" },
   { Dzien_Tygodnia_i_Data: "Sobota, 21 czerwca 2026", Skrot_Daty: "Sob. 21 cze", Godziny: "10:00 – 13:00", Tytul: "Mój pierwszy kubek", Odbiorcy: "Dorośli i młodzież", Prowadzacy: "Eleonora", Wolne_Miejsca: "2" },
@@ -915,7 +931,7 @@ zapisForm.addEventListener('submit', function(e) {
       zapisForm.style.display = 'none';
       document.getElementById('successMsg').style.display = 'block';
     } else {
-      alert('Problem z wysłaniem zgłoszenia :(');
+      alert('Problem z wysłaniem zgłoszenia.');
     }
   })
   .catch(err => console.error(err));

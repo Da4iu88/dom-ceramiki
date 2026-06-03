@@ -493,7 +493,6 @@
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a class="nav-logo" href="#top">
@@ -509,7 +508,6 @@
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero" id="top">
   <div class="hero-inner">
     <div>
@@ -533,7 +531,6 @@
   </div>
 </section>
 
-<!-- EVENTS STRIP -->
 <div class="strip">
   <div class="strip-inner">
     <div class="strip-label">Najbliższe warsztaty</div>
@@ -543,7 +540,6 @@
   </div>
 </div>
 
-<!-- WARSZTATY -->
 <section id="warsztaty">
   <div class="container">
     <span class="section-tag">Harmonogram</span>
@@ -556,7 +552,6 @@
   </div>
 </section>
 
-<!-- ZAPIS FORM -->
 <section id="zapis">
   <div class="container">
     <span class="section-tag">Formularz zapisu</span>
@@ -564,10 +559,6 @@
     <p>Wypełnij formularz — dane zostaną przesłane bezpośrednio do systemu Netlify pracowni.</p>
 
     <div class="form-wrap">
-      <!-- 
-        FORMULARZ ZINTEGROWANY Z NETLIFY FORMS 
-        Atrybut data-netlify="true" oraz ukryte pole form-name umożliwiają bezobsługowe zbieranie zgłoszeń.
-      -->
       <form class="form-grid" id="zapisForm" name="zgloszenia-warsztaty" method="POST" data-netlify="true">
         <input type="hidden" name="form-name" value="zgloszenia-warsztaty" />
         
@@ -605,7 +596,6 @@
   </div>
 </section>
 
-<!-- DOŁĄCZ -->
 <section id="dolacz">
   <div class="container">
     <span class="section-tag">Społeczność</span>
@@ -627,7 +617,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
         <h3>Wolontariusz</h3>
-        <p>Możesz pomóc przy organizacji warsztatów, social mediach, logistyce kiermaszy albo obsłudze gości. Każde ręce się przydają — nawet na kilka godzin w miesiącu.</p>
+        <p>Może pomóc przy organizacji warsztatów, social mediach, logistyce kiermaszy albo obsłudze gości. Każde ręce się przydają — nawet na kilka godzin w miesiącu.</p>
         <br>
         <a href="#kontakt" class="btn-outline" style="font-size:0.85rem; padding:8px 20px;">Napisz do nas</a>
       </div>
@@ -644,7 +634,6 @@
   </div>
 </section>
 
-<!-- O NAS -->
 <section id="onas">
   <div class="container">
     <div class="onas-inner">
@@ -680,7 +669,6 @@
   </div>
 </section>
 
-<!-- KONTAKT -->
 <section id="kontakt">
   <div class="container">
     <span class="section-tag">Kontakt</span>
@@ -738,7 +726,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <span class="footer-logo">Dom Ceramiki Zatorze</span>
@@ -751,32 +738,24 @@
 // ==========================================
 // KONFIGURACJA POŁĄCZENIA Z GOOGLE SHEETS
 // ==========================================
-// 1. Otwórz swój Arkusz Google.
-// 2. Kliknij: Plik -> Udostępnij -> Opublikuj w sieci.
-// 3. Wybierz z listy całą stronę (lub konkretną zakładkę) i zmień format na "Wartości rozdzielane przecinkami (.csv)".
-// 4. Skopiuj wygenerowany link i wklej go poniżej zamiast pustego ciągu znaków.
-const GOOGLE_SHEET_CSV_URL = ''; 
+const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6bm5WYoi6S3CAtrgnkNdopn16aSgEvMuziEG4nYKbKn9DNTS3WNVaybrtQZNdb-wyPoWwkXQHL8rv/pub?output=csv'; 
 
-// Rezerwowe dane demonstracyjne (ładowane automatycznie, dopóki nie wkleisz powyższego linku z Google Sheets)
+// Rezerwowe dane demonstracyjne
 const fallbackData = [
   { Dzien_Tygodnia_i_Data: "Sobota, 14 czerwca 2026", Skrot_Daty: "Sob. 14 cze", Godziny: "10:00 – 12:00", Tytul: "Warsztaty rodzinne — odciski roślin", Odbiorcy: "Dla rodzin z dziećmi", Prowadzacy: "Ewa", Wolne_Miejsca: "5" },
   { Dzien_Tygodnia_i_Data: "Sobota, 21 czerwca 2026", Skrot_Daty: "Sob. 21 cze", Godziny: "10:00 – 13:00", Tytul: "Mój pierwszy kubek", Odbiorcy: "Dorośli i młodzież", Prowadzacy: "Eleonora", Wolne_Miejsca: "2" },
-  { Dzien_Tygodnia_i_Data: "Sobota, 28 czerwca 2026", Skrot_Daty: "Sob. 28 cze", Godziny: "10:00 – 12:00", Tytul: "Wisiorki i breloczki — małe formy", Odbiorcy: "Wszyscy poziomy", Prowadzacy: "Ewa", Wolne_Miejsca: "8" },
-  { Dzien_Tygodnia_i_Data: "Sobota, 5 lipca 2026", Skrot_Daty: "Sob. 5 lip", Godziny: "11:00 – 13:00", Tytul: "Kafle z odciskiem tekstury", Odbiorcy: "Dorośli", Prowadzacy: "Eleonora", Wolne_Miejsca: "12" },
-  { Dzien_Tygodnia_i_Data: "Sobota, 19 lipca 2026", Skrot_Daty: "Sob. 19 lip", Godziny: "10:00 – 12:00", Tytul: "Breloczki i medaliony — przed odpustem", Odbiorcy: "Wszyscy", Prowadzacy: "Ewa i Eleonora", Wolne_Miejsca: "0" }
+  { Dzien_Tygodnia_i_Data: "Sobota, 28 czerwca 2026", Skrot_Daty: "Sob. 28 cze", Godziny: "10:00 – 12:00", Tytul: "Wisiorki i breloczki — małe formy", Odbiorcy: "Wszyscy poziomy", Prowadzacy: "Ewa", Wolne_Miejsca: "8" }
 ];
 
-// Parser CSV uwzględniający opcjonalne cudzysłowy generowane przez Google Sheets
+// Naprawiony parser CSV (poprawne traktowanie cudzysłowów i przecinków)
 function parseCSV(text) {
   const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
   if (lines.length === 0) return [];
   
-  // Nagłówki z pierwszego wiersza
   const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
   
   return lines.slice(1).map(line => {
-    // Podział po przecinkach z pominięciem przecinków wewnątrz cudzysłowów
-    const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)./).map(v => v.trim().replace(/^"|"$/g, ''));
+    const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.trim().replace(/^"|"$/g, ''));
     const item = {};
     headers.forEach((header, i) => {
       item[header] = values[i] || '';
@@ -785,7 +764,7 @@ function parseCSV(text) {
   });
 }
 
-// Funkcja generująca strukturę HTML dla elementów na stronie
+// Funkcja generująca strukturę HTML elementów na stronie
 function renderWorkshops(data) {
   const stripContainer = document.getElementById('strip-events-container');
   const workshopsContainer = document.getElementById('workshops-container');
@@ -814,7 +793,7 @@ function renderWorkshops(data) {
       spotsText = `! Ostatnie ${wolneMiejsca} miejsca`;
     }
 
-    // 1. Dodanie elementu do paska górnego
+    // Pasek górny
     const stripHtml = `
       <div class="strip-event">
         <div>
@@ -826,7 +805,7 @@ function renderWorkshops(data) {
     `;
     stripContainer.insertAdjacentHTML('beforeend', stripHtml);
 
-    // 2. Dodanie karty warsztatu do siatki
+    // Karta warsztatu
     const btnClass = isSoldOut ? 'wc-btn disabled' : 'wc-btn';
     const btnHref = isSoldOut ? '#workshops-container' : '#zapis';
     const btnText = isSoldOut ? 'Brak miejsc' : 'Zapisz się';
@@ -851,7 +830,7 @@ function renderWorkshops(data) {
     `;
     workshopsContainer.insertAdjacentHTML('beforeend', cardHtml);
 
-    // 3. Dodanie opcji do formularza (tylko jeżeli warsztat ma wolne miejsca)
+    // Lista rozwijana formularza
     if (!isSoldOut) {
       const option = document.createElement('option');
       option.value = `${item.Skrot_Daty} — ${item.Tytul}`;
@@ -861,7 +840,7 @@ function renderWorkshops(data) {
   });
 }
 
-// Pobieranie danych (z Google Sheets lub lokalnego fallbacku)
+// Pobieranie danych z Google Sheets
 if (GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
   fetch(GOOGLE_SHEET_CSV_URL)
     .then(res => {
@@ -873,25 +852,22 @@ if (GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
       if (parsed && parsed.length > 0 && parsed[0].Tytul) {
         renderWorkshops(parsed);
       } else {
-        console.warn("Dane z arkusza mają niepoprawny format nagłówków. Ładowanie danych demo.");
+        console.warn("Błędny format danych z arkusza. Ładowanie danych demo.");
         renderWorkshops(fallbackData);
       }
     })
     .catch(err => {
-      console.error("Błąd pobierania danych, załadowano dane demo:", err);
+      console.error("Błąd sieci. Załadowano dane demo:", err);
       renderWorkshops(fallbackData);
     });
 } else {
-  // Brak linku - ładujemy domyślne dane demonstracyjne
   renderWorkshops(fallbackData);
 }
 
-// ==========================================
-// OBSŁUGA FORMULARZA NETLIFY PRZEZ AJAX (Tło)
-// ==========================================
+// Obsługa formularza Netlify przez AJAX
 const zapisForm = document.getElementById('zapisForm');
 zapisForm.addEventListener('submit', function(e) {
-  e.preventDefault(); // Zatrzymanie przeładowania strony
+  e.preventDefault();
   
   const formData = new FormData(zapisForm);
   
@@ -905,12 +881,12 @@ zapisForm.addEventListener('submit', function(e) {
       zapisForm.style.display = 'none';
       document.getElementById('successMsg').style.display = 'block';
     } else {
-      alert('Wystąpił problem techniczny podczas wysyłania zgłoszenia. Spróbuj ponownie.');
+      alert('Problem z wysłaniem zgłoszenia. Spróbuj ponownie.');
     }
   })
   .catch(err => {
     console.error(err);
-    alert('Błąd sieci. Upewnij się, że masz połączenie z internetem.');
+    alert('Błąd sieci.');
   });
 });
 </script>

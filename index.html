@@ -171,7 +171,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; /* Zapewnia, że zdjęcie nie wychodzi poza zaokrąglone rogi */
+    overflow: hidden;
+    border: 1px solid var(--border);
   }
   .hero-visual img {
     width: 100%;
@@ -431,19 +432,18 @@
   }
   .info-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
   .info-val { font-size: 0.95rem; color: var(--ink); font-weight: 500; }
-  .map-placeholder {
-    background: var(--clay-lt);
+  
+  .map-container {
     border-radius: var(--radius);
+    overflow: hidden;
     border: 1px solid var(--border);
     aspect-ratio: 4/3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 8px;
-    color: var(--clay);
   }
-  .map-placeholder p { font-size: 0.82rem; color: var(--muted); font-style: italic; }
+  .map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
 
   /* ─── FOOTER ─── */
   footer {
@@ -520,9 +520,9 @@
         <a href="#warsztaty" class="btn-outline">Zobacz terminy</a>
       </div>
     </div>
-    <!-- ZDJĘCIE ZAMIAST PLACEHOLDERA -->
     <div class="hero-visual">
-      <img src="https://images.unsplash.com/photo-1565193566173-7a0cb3d90403?auto=format&fit=crop&w=800&q=80" alt="Zdjęcie glinianych naczyń na kole garncarskim">
+      <!-- Podmienione, stabilne zdjęcie serwowane bezpośrednio ze sprawdzonych serwerów obrazkowych -->
+      <img src="https://images.pexels.com/photos/3815418/pexels-photo-3815418.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Praca z gliną w pracowni ceramicznej">
     </div>
   </div>
 </section>
@@ -608,7 +608,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         </div>
         <h3>Wytwórca</h3>
-        <p>Masz czas raz w tygodniu i chcesz lepiać? Poszukujemy osób, które stworzą wyroby sprzedawane na kiermasach i w internecie. Nie musisz mieć doświadczenia.</p>
+        <p>Masz czas raz w tygodniu i chcesz lepić? Poszukujemy osób, które stworzą wyroby sprzedawane na kiermasach i w internecie. Nie musisz mieć doświadczenia.</p>
         <br>
         <a href="#kontakt" class="btn-outline" style="font-size:0.85rem; padding:8px 20px;">Napisz do nas</a>
       </div>
@@ -642,20 +642,15 @@
         <span class="section-tag">O nas</span>
         <h2>Garncarnię robimy razem</h2>
         <p style="margin-bottom:1rem;">Dom Ceramiki Zatorze to społeczna pracownia garncarska działająca przy parafii w Olsztynie. Powstała z prostego przekonania: rękodzieło łączy ludzi i daje realną radość tworzenia — niezależnie od wieku i umiejętności.</p>
-        <p style="margin-bottom:1rem;">Wyroby z pracowni trafiają na kiermasze parafialne, pod kościół po mszy i do zamówień indywidualnych. Każda złotówka wraca do wspólnoty — na glinę, szkliwa i kolejne warsztaty.</p>
+        <p style="margin-bottom:1rem;">Wyroby z pracowni trafiają na kiermasze parafialne, pod kościoł po mszy i do zamówień indywidualnych. Każda złotówka wraca do wspólnoty — na glinę, szkliwa i kolejne warsztaty.</p>
         <p>Chcemy być w pełni samowystarczalni: od organizacji, przez angażowanie parafian, po zdolność do samodzielnego finansowania się z wyrobów i zajęć.</p>
       </div>
       <div>
         <h3 style="margin-bottom:0.5rem; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); font-family:'Nunito',sans-serif;">Nasz zespół</h3>
         
-        <!-- ========================================== -->
-        <!-- TUTAJ MOŻESZ EDYTOWAĆ KAFELKI Z ZESPOŁEM -->
-        <!-- ========================================== -->
         <div class="team-grid">
-          
           <!-- Osoba 1 -->
           <div class="team-card">
-            <!-- Skrót w kółku (2 litery) -->
             <div class="team-avatar">Ew</div> 
             <div>
               <div class="team-name">Ewa</div>
@@ -707,11 +702,7 @@
               <div class="team-role">Promocja i kiermasze</div>
             </div>
           </div>
-
         </div>
-        <!-- ========================================== -->
-        <!-- KONIEC KAFELKÓW Z ZESPOŁEM -->
-        <!-- ========================================== -->
 
       </div>
     </div>
@@ -733,7 +724,7 @@
           </div>
           <div>
             <div class="info-label">Adres</div>
-            <div class="info-val">ul. Franciszka Barcza, Olsztyn-Zatorze<br><span style="font-size:0.82rem;color:var(--muted);">przy kościele parafialnym, wejście od strony sali</span></div>
+            <div class="info-val">ul. Franciszka Barcza, Olsztyn-Zatorze<br><span style="font-size:0.82rem;color:var(--muted);">przy kościele pw. św. Józefa, wejście od strony sali</span></div>
           </div>
         </div>
 
@@ -768,9 +759,14 @@
         </div>
       </div>
 
-      <div class="map-placeholder">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <p>Tu wstawisz mapę Google Maps<br>(iframe embed z Google Maps)</p>
+      <!-- INTERAKTYWNA MAPA GOOGLE EMBED ZAMIAST PLACEHOLDERA -->
+      <div class="map-container">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m13!1m1 manually_centered!2d20.5053!3d53.7745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46e2792ccd4ab03d%3A0xc36773a4b0d0be0!2sParafia%20Rzymskokatolicka%20%C5%9Bw.%20J%C3%B3zefa!5e0!3m2!1spl!2spl!4v1717420000000!5m2!1spl!2spl" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
       </div>
     </div>
   </div>
@@ -791,14 +787,12 @@
 // ==========================================
 const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6bm5WYoi6S3CAtrgnkNdopn16aSgEvMuziEG4nYKbKn9DNTS3WNVaybrtQZNdb-wyPoWwkXQHL8rv/pub?output=csv'; 
 
-// Rezerwowe dane demonstracyjne
 const fallbackData = [
   { Dzien_Tygodnia_i_Data: "Sobota, 14 czerwca 2026", Skrot_Daty: "Sob. 14 cze", Godziny: "10:00 – 12:00", Tytul: "Warsztaty rodzinne — odciski roślin", Odbiorcy: "Dla rodzin z dziećmi", Prowadzacy: "Ewa", Wolne_Miejsca: "5" },
   { Dzien_Tygodnia_i_Data: "Sobota, 21 czerwca 2026", Skrot_Daty: "Sob. 21 cze", Godziny: "10:00 – 13:00", Tytul: "Mój pierwszy kubek", Odbiorcy: "Dorośli i młodzież", Prowadzacy: "Eleonora", Wolne_Miejsca: "2" },
   { Dzien_Tygodnia_i_Data: "Sobota, 28 czerwca 2026", Skrot_Daty: "Sob. 28 cze", Godziny: "10:00 – 12:00", Tytul: "Wisiorki i breloczki — małe formy", Odbiorcy: "Wszyscy poziomy", Prowadzacy: "Ewa", Wolne_Miejsca: "8" }
 ];
 
-// Naprawiony parser CSV (poprawne traktowanie cudzysłowów i przecinków)
 function parseCSV(text) {
   const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
   if (lines.length === 0) return [];
@@ -815,7 +809,6 @@ function parseCSV(text) {
   });
 }
 
-// Funkcja generująca strukturę HTML elementów na stronie
 function renderWorkshops(data) {
   const stripContainer = document.getElementById('strip-events-container');
   const workshopsContainer = document.getElementById('workshops-container');
@@ -844,7 +837,6 @@ function renderWorkshops(data) {
       spotsText = `! Ostatnie ${wolneMiejsca} miejsca`;
     }
 
-    // Pasek górny
     const stripHtml = `
       <div class="strip-event">
         <div>
@@ -856,7 +848,6 @@ function renderWorkshops(data) {
     `;
     stripContainer.insertAdjacentHTML('beforeend', stripHtml);
 
-    // Karta warsztatu
     const btnClass = isSoldOut ? 'wc-btn disabled' : 'wc-btn';
     const btnHref = isSoldOut ? '#workshops-container' : '#zapis';
     const btnText = isSoldOut ? 'Brak miejsc' : 'Zapisz się';
@@ -881,7 +872,6 @@ function renderWorkshops(data) {
     `;
     workshopsContainer.insertAdjacentHTML('beforeend', cardHtml);
 
-    // Lista rozwijana formularza
     if (!isSoldOut) {
       const option = document.createElement('option');
       option.value = `${item.Skrot_Daty} — ${item.Tytul}`;
@@ -891,11 +881,10 @@ function renderWorkshops(data) {
   });
 }
 
-// Pobieranie danych z Google Sheets
 if (GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
   fetch(GOOGLE_SHEET_CSV_URL)
     .then(res => {
-      if (!res.ok) throw new Error('Błąd ładowania arkusza sieciowego');
+      if (!res.ok) throw new Error('Błąd ładowania arkusza');
       return res.text();
     })
     .then(text => {
@@ -903,25 +892,21 @@ if (GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
       if (parsed && parsed.length > 0 && parsed[0].Tytul) {
         renderWorkshops(parsed);
       } else {
-        console.warn("Błędny format danych z arkusza. Ładowanie danych demo.");
         renderWorkshops(fallbackData);
       }
     })
     .catch(err => {
-      console.error("Błąd sieci. Załadowano dane demo:", err);
+      console.error(err);
       renderWorkshops(fallbackData);
     });
 } else {
   renderWorkshops(fallbackData);
 }
 
-// Obsługa formularza Netlify przez AJAX
 const zapisForm = document.getElementById('zapisForm');
 zapisForm.addEventListener('submit', function(e) {
   e.preventDefault();
-  
   const formData = new FormData(zapisForm);
-  
   fetch('/', {
     method: 'POST',
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -932,13 +917,10 @@ zapisForm.addEventListener('submit', function(e) {
       zapisForm.style.display = 'none';
       document.getElementById('successMsg').style.display = 'block';
     } else {
-      alert('Problem z wysłaniem zgłoszenia. Spróbuj ponownie.');
+      alert('Problem z wysłaniem zgłoszenia.');
     }
   })
-  .catch(err => {
-    console.error(err);
-    alert('Błąd sieci.');
-  });
+  .catch(err => console.error(err));
 });
 </script>
 

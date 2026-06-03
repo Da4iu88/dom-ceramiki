@@ -259,7 +259,7 @@
   }
 
   /* ─── WORKSHOPS ─── */
-  #warsztaty { background: var(--cream); }
+  #zajęcia { background: var(--cream); }
   .workshops-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -499,7 +499,7 @@
       Dom Ceramiki Zatorze
     </a>
     <ul class="nav-links">
-      <li><a href="#warsztaty">Warsztaty</a></li>
+      <li><a href="#zajęcia">Zajęcia</a></li>
       <li><a href="#dolacz">Dołącz</a></li>
       <li><a href="#onas">O nas</a></li>
       <li><a href="#zapis" class="nav-cta">Zapisz się</a></li>
@@ -514,8 +514,8 @@
       <h1>Lepimy razem.<br><em>Glina łączy ludzi.</em></h1>
       <p class="hero-lead">Społeczna pracownia ceramiczna przy parafii — dla każdego, kto chce spróbować, stworzyć coś własnoręcznie i być częścią wspólnoty.</p>
       <div class="hero-buttons">
-        <a href="#zapis" class="btn-primary">Zapisz się na warsztat</a>
-        <a href="#warsztaty" class="btn-outline">Zobacz terminy</a>
+        <a href="#zapis" class="btn-primary">Zapisz się na zajęcia
+        <a href="#zajęcia" class="btn-outline">Zobacz terminy</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -526,17 +526,17 @@
 
 <div class="strip">
   <div class="strip-inner">
-    <div class="strip-label">Najbliższe warsztaty</div>
+    <div class="strip-label">Najbliższe zajęcia</div>
     <div class="strip-events" id="strip-events-container">
       <div style="padding:14px; font-size:0.85rem; color:var(--muted);">Ładowanie terminów...</div>
     </div>
   </div>
 </div>
 
-<section id="warsztaty">
+<section id="zajęcia">
   <div class="container">
     <span class="section-tag">Harmonogram</span>
-    <h2>Nadchodzące warsztaty i zajęcia</h2>
+    <h2>Nadchodzące zajęcia</h2>
     <p>Każde zajęcia są otwarte dla wszystkich — nie trzeba mieć żadnego doświadczenia. Przynieś chęci, resztą zajmie się glina.</p>
 
     <div class="workshops-grid" id="workshops-container">
@@ -552,8 +552,8 @@
     <p>Wypełnij formularz — dane zostaną przesłane bezpośrednio do systemu Netlify pracowni.</p>
 
     <div class="form-wrap">
-      <form class="form-grid" id="zapisForm" name="zgloszenia-warsztaty" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="zgloszenia-warsztaty" />
+      <form class="form-grid" id="zapisForm" name="zgloszenia-zajęcia" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="zgloszenia-zajęcia" />
         
         <div class="form-group">
           <label for="f-imie">Imię i nazwisko *</label>
@@ -634,7 +634,7 @@
         <span class="section-tag">O nas</span>
         <h2>Garncarnię robimy razem</h2>
         <p style="margin-bottom:1rem;">Dom Ceramiki Zatorze to społeczna pracownia garncarska działająca przy parafii w Olsztynie. Powstała z prostego przekonania: rękodzieło łączy ludzi i daje realną radość tworzenia — niezależnie od wieku i umiejętności.</p>
-        <p style="margin-bottom:1rem;">Wyroby z pracowni trafiają na kiermasze parafialne, pod kościół po mszy i do zamówień indywidualnych. Każda złotówka wraca do wspólnoty — na glinę, szkliwa i kolejne warsztaty.</p>
+        <p style="margin-bottom:1rem;">Wyroby z pracowni trafiają na kiermasze parafialne, pod kościół po mszy i do zamówień indywidualnych. Każda złotówka wraca do wspólnoty — na glinę, szkliwa i kolejne zajęcia.</p>
         <p>Chcemy być w pełni samowystarczalni: od organizacji, przez angażowanie parafian, po zdolność do samodzielnego finansowania się z wyrobów i zajęć.</p>
       </div>
       <div>
@@ -653,7 +653,7 @@
             <div class="team-avatar">El</div>
             <div>
               <div class="team-name">Eleonora</div>
-              <div class="team-role">Szkolenia i warsztaty</div>
+              <div class="team-role">Szkolenia i zajęcia</div>
             </div>
           </div>
           
@@ -772,7 +772,7 @@ const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ
 
 // Rezerwowe dane demonstracyjne
 const fallbackData = [
-  { Dzien_Tygodnia_i_Data: "Sobota, 14 czerwca 2026", Skrot_Daty: "Sob. 14 cze", Godziny: "10:00 – 12:00", Tytul: "Warsztaty rodzinne — odciski roślin", Odbiorcy: "Dla rodzin z dziećmi", Prowadzacy: "Ewa", Wolne_Miejsca: "5" },
+  { Dzien_Tygodnia_i_Data: "Sobota, 14 czerwca 2026", Skrot_Daty: "Sob. 14 cze", Godziny: "10:00 – 12:00", Tytul: "Zajęcia rodzinne — odciski roślin", Odbiorcy: "Dla rodzin z dziećmi", Prowadzacy: "Ewa", Wolne_Miejsca: "5" },
   { Dzien_Tygodnia_i_Data: "Sobota, 21 czerwca 2026", Skrot_Daty: "Sob. 21 cze", Godziny: "10:00 – 13:00", Tytul: "Mój pierwszy kubek", Odbiorcy: "Dorośli i młodzież", Prowadzacy: "Eleonora", Wolne_Miejsca: "2" },
   { Dzien_Tygodnia_i_Data: "Sobota, 28 czerwca 2026", Skrot_Daty: "Sob. 28 cze", Godziny: "10:00 – 12:00", Tytul: "Wisiorki i breloczki — małe formy", Odbiorcy: "Wszyscy poziomy", Prowadzacy: "Ewa", Wolne_Miejsca: "8" }
 ];

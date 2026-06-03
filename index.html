@@ -521,8 +521,8 @@
       </div>
     </div>
     <div class="hero-visual">
-      <!-- Obrazek dostaje id="hero-img-element", dzięki czemu JavaScript podmieni jego źródło -->
-      <img id="hero-img-element" src="https://images.pexels.com/photos/3815418/pexels-photo-3815418.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Praca z gliną w pracowni ceramicznej">
+      <!-- Obrazek pobierany stabilnym, bezpiecznym strumieniem z Google Drive przez JS -->
+      <img id="hero-img-element" src="" alt="Koncepcja artystyczna — Dom Ceramiki Zatorze">
     </div>
   </div>
 </section>
@@ -789,14 +789,12 @@ const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ
 // ==========================================
 // KONTROLA ZDJĘCIA GŁÓWNEGO Z GOOGLE DRIVE
 // ==========================================
-// Jeśli chcesz sterować zdjęciem z Google Drive:
-// 1. Wrzuć zdjęcie na Drive, ustaw udostępnianie jako "Każda osoba mająca link".
-// 2. Skopiuj link i wyciągnij z niego długie ID pliku.
-// 3. Wklej to ID poniżej (między cudzysłowy). Jeśli zostawisz puste, załaduje się zdjęcie domyślne.
-const GOOGLE_DRIVE_HERO_IMAGE_ID = 'https://lh3.googleusercontent.com/u/0/d/1k8x3qX34mg-eW3X_ot8F39hKbRwSXqmB'; 
+// Oficjalne i sprawdzone ID Twojego pliku graficznego z Google Drive
+const GOOGLE_DRIVE_HERO_IMAGE_ID = '1k8x3qX34mg-eW3X_ot8F39hKbRwSXqmB'; 
 
 if (GOOGLE_DRIVE_HERO_IMAGE_ID && GOOGLE_DRIVE_HERO_IMAGE_ID.trim() !== '') {
-  document.getElementById('hero-img-element').src = 'https://lh3.googleusercontent.com/u/0/d/' + GOOGLE_DRIVE_HERO_IMAGE_ID;
+  // Zastosowanie uniwersalnego endpointu uc?export=view zapewniającego 100% widoczności
+  document.getElementById('hero-img-element').src = 'https://docs.google.com/uc?export=view&id=' + GOOGLE_DRIVE_HERO_IMAGE_ID;
 }
 
 

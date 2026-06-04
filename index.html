@@ -81,7 +81,6 @@
     width: 28px;
     height: 28px;
     background-color: var(--clay);
-    /* DODANO v=2 do pliku css */
     background-image: url('/favicon.png?v=2'); 
     background-repeat: no-repeat;
     background-position: center;
@@ -270,7 +269,6 @@
   #warsztaty { background: var(--cream); }
   .workshops-grid {
     display: grid;
-    /* Zmiana na 260px zapobiega wychodzeniu elementów za małe ekrany */
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.25rem;
     margin-top: 2.5rem;
@@ -489,7 +487,7 @@
 
   /* ─── RESPONSIVE (TELEFONY) ─── */
   @media (max-width: 700px) {
-    section { padding: 3rem 1.5rem; } /* Trochę mniejsze marginesy sekcji na telefonach */
+    section { padding: 3rem 1.5rem; } 
     .hero { padding: 3rem 1.5rem 2rem; }
     
     .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
@@ -500,12 +498,11 @@
     .team-grid { grid-template-columns: 1fr; }
     .form-grid { grid-template-columns: 1fr; }
     
-    /* Naprawa paska na telefonach */
     .strip-inner { flex-direction: column; }
     .strip-label { justify-content: center; border-radius: var(--radius-sm); padding: 10px; margin: 10px 0 0 0;}
     .strip-events { flex-direction: column; width: 100%; }
     .strip-event { border-left: none; border-bottom: 1px solid var(--border); padding: 12px 0; justify-content: space-between; }
-    .strip-event:last-child { border-bottom: none; } /* Ostatni event bez dolnej kreski */
+    .strip-event:last-child { border-bottom: none; } 
   }
 </style>
 </head>
@@ -540,7 +537,6 @@
       </div>
     </div>
     <div class="hero-visual">
-      <!-- Upewnij się, że masz plik hero.png w folderze! -->
       <img src="hero.png" alt="Koncepcja artystyczna — Dom Ceramiki Zatorze">
     </div>
   </div>
@@ -778,9 +774,10 @@
         </div>
       </div>
 
+      <!-- ZAKTUALIZOWANA MAPA -->
       <div class="map-container">
         <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2350.624898114639!2d20.502809677334757!3d53.77894547241285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46e2792ccd4ab03d%3A0xc36773a4b0d0be0!2sParafia%20Rzymskokatolicka%20%C5%9Bw.%20J%C3%B3zefa!5e0!3m2!1spl!2spl!4v1717420000000!5m2!1spl!2spl" 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2357.2913237255357!2d20.482454675465004!3d53.78430234186589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46e27ecc2df91541%3A0x1ab6c8f8ddc2b981!2sParafia%20Chrystusa%20Kr%C3%B3la%20w%20Olsztynie!5e0!3m2!1sen!2spl!4v1780587858535!5m2!1sen!2spl" 
           allowfullscreen="" 
           loading="lazy" 
           referrerpolicy="no-referrer-when-downgrade">

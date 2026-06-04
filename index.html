@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dom Ceramiki Zatorze — społeczna pracownia garnarska</title>
-<link rel="icon" type="image/png" href="favicon.png">
+<title>Dom Ceramiki Zatorze — społeczna pracownia garncarska</title>
+
+<!-- WYMUSZENIE ODŚWIEŻENIA FAVICONU (v=2) -->
+<link rel="icon" type="image/png" href="/favicon.png?v=2">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;500;700&display=swap" rel="stylesheet">
@@ -77,11 +80,12 @@
   .nav-logo span.dot {
     width: 28px;
     height: 28px;
-    background-color: var(--clay); /* Zachowuje pomarańczowy kolor bazowy */
-    background-image: url('favicon.png'); /* Wczytuje Twoją literkę T */
+    background-color: var(--clay);
+    /* DODANO v=2 do pliku css */
+    background-image: url('/favicon.png?v=2'); 
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 70%; /* Dopasuj tę wartość (np. 70%, 100%, cover), aby ustawić wielkość litery */
+    background-size: 70%;
     border-radius: 50%;
     display: inline-block;
     flex-shrink: 0;
@@ -262,11 +266,12 @@
     display: block;
   }
 
-  /* ─── WORKSHOPS ─── */
+  /* ─── WARSZTATY ─── */
   #warsztaty { background: var(--cream); }
   .workshops-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    /* Zmiana na 260px zapobiega wychodzeniu elementów za małe ekrany */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.25rem;
     margin-top: 2.5rem;
   }
@@ -482,8 +487,11 @@
     font-size: 0.95rem;
   }
 
-  /* ─── RESPONSIVE ─── */
+  /* ─── RESPONSIVE (TELEFONY) ─── */
   @media (max-width: 700px) {
+    section { padding: 3rem 1.5rem; } /* Trochę mniejsze marginesy sekcji na telefonach */
+    .hero { padding: 3rem 1.5rem 2rem; }
+    
     .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
     .hero-visual { width: 100%; max-width: 400px; margin: 0 auto; display: flex; }
     .onas-inner { grid-template-columns: 1fr; gap: 2rem; }
@@ -494,9 +502,10 @@
     
     /* Naprawa paska na telefonach */
     .strip-inner { flex-direction: column; }
-    .strip-label { justify-content: center; border-radius: var(--radius-sm); padding: 10px; }
+    .strip-label { justify-content: center; border-radius: var(--radius-sm); padding: 10px; margin: 10px 0 0 0;}
     .strip-events { flex-direction: column; width: 100%; }
-    .strip-event { border-left: none; border-bottom: 1px solid var(--border); padding: 12px 8px; justify-content: space-between; }
+    .strip-event { border-left: none; border-bottom: 1px solid var(--border); padding: 12px 0; justify-content: space-between; }
+    .strip-event:last-child { border-bottom: none; } /* Ostatni event bez dolnej kreski */
   }
 </style>
 </head>
@@ -531,6 +540,7 @@
       </div>
     </div>
     <div class="hero-visual">
+      <!-- Upewnij się, że masz plik hero.png w folderze! -->
       <img src="hero.png" alt="Koncepcja artystyczna — Dom Ceramiki Zatorze">
     </div>
   </div>

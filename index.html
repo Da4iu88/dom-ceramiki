@@ -908,6 +908,7 @@
     <div class="past-events-grid" id="past-events-container">
       <div style="grid-column: 1/-1; padding:2rem; text-align:center; color:var(--muted);">Ładowanie ostatnich zajęć...</div>
     </div>
+    <div id="past-events-more-wrap" style="text-align:center; margin-top:1.75rem;"></div>
   </div>
 </section>
 
@@ -1158,8 +1159,11 @@ function renderWorkshops(data) {
   workshopsContainer.innerHTML = '';
   selectElement.innerHTML = '<option value="">— wybierz termin —</option>';
 
+  // Ostatni przesłany mail = ostatni wiersz w arkuszu = pierwszy kafelek na stronie
+  const ordered = [...data].reverse();
+
   // Wyświetl WSZYSTKIE zajęcia z bazy — bez limitu
-  data.forEach(item => {
+  ordered.forEach(item => {
     const rawWolne = (item.Wolne_Miejsca || '').trim();
     const wolneMiejsca = parseInt(rawWolne);
     // Jeśli w kolumnie jest tekst zamiast liczby (np. "Zapytaj o miejsca"),
@@ -1265,42 +1269,55 @@ if (GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
 }
 
 // ── RENDEROWANIE ZAJĘĆ, KTÓRE SIĘ ODBYŁY ──
+const PAST_EVENTS_LIMIT = 3;
+
+function pastEventCardHtml(item) {
+  // Każda pozycja to "miniaturka::link_do_pełnej_wersji" (wideo albo zdjęcie)
+  const zdjecia = (item.Zdjecia || '').split(',').map(s => s.trim()).filter(Boolean);
+  const photosClass = zdjecia.length <= 1 ? 'pe-photos single' : 'pe-photos';
+  const photosHtml = zdjecia.length > 0
+    ? `<div class="${photosClass}">${zdjecia.slice(0, 4).map(entry => {
+        const [thumb, view] = entry.split('::');
+        const linkUrl = view || thumb;
+        const thumbUrl = thumb || view;
+        return `<a href="${linkUrl}" target="_blank" rel="noopener">
+                  <img src="${thumbUrl}" alt="Zdjęcie/wideo z zajęć" loading="lazy"
+                       onerror="this.parentElement.classList.add('pe-broken'); this.replaceWith(Object.assign(document.createElement('div'), {className:'pe-fallback', textContent:'🎬 Zobacz'}));">
+                </a>`;
+      }).join('')}</div>`
+    : '';
+
+  return `
+    <div class="past-event-card">
+      ${photosHtml}
+      <div class="pe-body">
+        <div class="pe-date">${item.Data}</div>
+        <div class="pe-opis">${item.Opis}</div>
+      </div>
+    </div>
+  `;
+}
+
 function renderPastEvents(data) {
   const container = document.getElementById('past-events-container');
+  const moreWrap = document.getElementById('past-events-more-wrap');
   container.innerHTML = '';
+  moreWrap.innerHTML = '';
 
-  // Najnowsze na górze — zakładamy że Data jest w formacie dd.MM.yyyy
-  const sorted = [...data].sort((a, b) => {
-    const parseD = s => { const [d,m,y] = (s || '').split('.'); return new Date(`${y}-${m}-${d}`); };
-    return parseD(b.Data) - parseD(a.Data);
-  });
+  // Ostatni przesłany mail = ostatni wiersz w arkuszu = pierwszy kafelek na stronie
+  const ordered = [...data].reverse();
+  const widoczne = ordered.slice(0, PAST_EVENTS_LIMIT);
+  const reszta = ordered.slice(PAST_EVENTS_LIMIT);
 
-  sorted.forEach(item => {
-    // Każda pozycja to "miniaturka::link_do_pełnej_wersji" (wideo albo zdjęcie)
-    const zdjecia = (item.Zdjecia || '').split(',').map(s => s.trim()).filter(Boolean);
-    const photosClass = zdjecia.length <= 1 ? 'pe-photos single' : 'pe-photos';
-    const photosHtml = zdjecia.length > 0
-      ? `<div class="${photosClass}">${zdjecia.slice(0, 4).map(entry => {
-          const [thumb, view] = entry.split('::');
-          const linkUrl = view || thumb;
-          const thumbUrl = thumb || view;
-          return `<a href="${linkUrl}" target="_blank" rel="noopener">
-                    <img src="${thumbUrl}" alt="Zdjęcie/wideo z zajęć" loading="lazy"
-                         onerror="this.parentElement.classList.add('pe-broken'); this.replaceWith(Object.assign(document.createElement('div'), {className:'pe-fallback', textContent:'🎬 Zobacz'}));">
-                  </a>`;
-        }).join('')}</div>`
-      : '';
+  widoczne.forEach(item => container.insertAdjacentHTML('beforeend', pastEventCardHtml(item)));
 
-    container.insertAdjacentHTML('beforeend', `
-      <div class="past-event-card">
-        ${photosHtml}
-        <div class="pe-body">
-          <div class="pe-date">${item.Data}</div>
-          <div class="pe-opis">${item.Opis}</div>
-        </div>
-      </div>
-    `);
-  });
+  if (reszta.length > 0) {
+    moreWrap.innerHTML = `<button type="button" class="wc-btn" id="pe-more-btn">Zobacz poprzednie zajęcia (${reszta.length})</button>`;
+    document.getElementById('pe-more-btn').addEventListener('click', () => {
+      reszta.forEach(item => container.insertAdjacentHTML('beforeend', pastEventCardHtml(item)));
+      moreWrap.innerHTML = '';
+    }, { once: true });
+  }
 }
 
 if (GOOGLE_PAST_CSV_URL && GOOGLE_PAST_CSV_URL.trim() !== '') {

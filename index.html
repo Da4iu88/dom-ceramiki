@@ -402,6 +402,14 @@
     width: 100%; height: 100%;
     border: 0;
   }
+  .pe-video-fallback {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.78rem;
+    padding: 6px 0 2px;
+  }
+  .pe-video-fallback a { color: var(--clay); font-weight: 700; text-decoration: none; }
+  .pe-video-fallback a:hover { text-decoration: underline; }
   .pe-fallback {
     height: 130px;
     display: flex;
@@ -1295,9 +1303,19 @@ function pastEventCardHtml(item) {
         const thumbUrl = thumb || link;
 
         if (typ === 'wideo') {
-          // Osadzony odtwarzacz Google Drive — odtwarza się od razu w kafelku
+          // Osadzony odtwarzacz Google Drive — na części telefonów obraz czasem
+          // nie renderuje się w ramce (dźwięk i pasek postępu działają, ale ekran
+          // jest czarny — to ograniczenie odtwarzacza Google, nie strony). Dlatego
+          // dajemy dodatkowo zapasowy link otwierający wideo w nowej karcie/aplikacji.
+          const linkOtworz = linkUrl.replace('/preview', '/view');
           return `<div class="pe-video-wrap">
-                    <iframe src="${linkUrl}" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+                    <iframe src="${linkUrl}"
+                            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                            allowfullscreen webkitallowfullscreen mozallowfullscreen
+                            loading="lazy"></iframe>
+                  </div>
+                  <div class="pe-video-fallback">
+                    <a href="${linkOtworz}" target="_blank" rel="noopener">Nie widać wideo? Otwórz w nowej karcie →</a>
                   </div>`;
         }
 

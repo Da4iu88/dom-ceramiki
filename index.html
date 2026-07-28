@@ -265,6 +265,7 @@
   /* zawsze zielony — niezależnie od liczby miejsc */
   .strip-event-spots.few { background: var(--moss); }
   .strip-event-spots.none { background: var(--moss); }
+  .strip-event-spots.custom { background: var(--clay); }
 
   /* przycisk "Zapisz się" w stripie */
   .strip-event-btn {
@@ -337,6 +338,7 @@
   .wc-spots.ok { color: var(--moss); }
   .wc-spots.few { color: var(--clay); }
   .wc-spots.none { color: var(--muted); }
+  .wc-spots.custom { color: var(--clay); }
   .wc-btn {
     font-size: 0.82rem;
     font-weight: 700;
@@ -1158,14 +1160,22 @@ function renderWorkshops(data) {
 
   // Wyświetl WSZYSTKIE zajęcia z bazy — bez limitu
   data.forEach(item => {
-    const wolneMiejsca = parseInt(item.Wolne_Miejsca);
-    
+    const rawWolne = (item.Wolne_Miejsca || '').trim();
+    const wolneMiejsca = parseInt(rawWolne);
+    // Jeśli w kolumnie jest tekst zamiast liczby (np. "Zapytaj o miejsca"),
+    // pokazujemy go jako klikalny link do WhatsApp zamiast "Brak miejsc"
+    const jestTekstem = rawWolne !== '' && isNaN(wolneMiejsca);
+
     let spotsClass = 'ok';
     let stripSpotsClass = '';
     let spotsText = `✓ ${wolneMiejsca} wolnych miejsc`;
     let isSoldOut = false;
 
-    if (isNaN(wolneMiejsca) || wolneMiejsca <= 0) {
+    if (jestTekstem) {
+      spotsClass = 'custom';
+      stripSpotsClass = 'custom';
+      spotsText = rawWolne;
+    } else if (isNaN(wolneMiejsca) || wolneMiejsca <= 0) {
       spotsClass = 'none';
       stripSpotsClass = 'none';
       spotsText = 'Brak wolnych miejsc';
@@ -1176,10 +1186,14 @@ function renderWorkshops(data) {
       spotsText = `! Ostatnie ${wolneMiejsca} miejsca`;
     }
 
+    const WHATSAPP_LINK = 'https://wa.me/48663921131';
+
     // ── STRIP: miejsca + przycisk "Zapisz się" obok siebie ──
-    const btnStripClass = isSoldOut ? 'strip-event-btn disabled' : 'strip-event-btn';
-    const btnStripHref = isSoldOut ? 'javascript:void(0)' : '#zapis';
-    const btnStripText = isSoldOut ? 'Brak miejsc' : 'Zapisz się';
+    const btnStripClass = jestTekstem ? 'strip-event-btn' : (isSoldOut ? 'strip-event-btn disabled' : 'strip-event-btn');
+    const btnStripHref = jestTekstem ? WHATSAPP_LINK : (isSoldOut ? 'javascript:void(0)' : '#zapis');
+    const btnStripTarget = jestTekstem ? ' target="_blank" rel="noopener"' : '';
+    const btnStripText = jestTekstem ? 'Napisz na WhatsApp' : (isSoldOut ? 'Brak miejsc' : 'Zapisz się');
+    const stripSpotsLabel = jestTekstem ? rawWolne : (isSoldOut ? 'Brak' : wolneMiejsca + ' miejsc');
 
     const stripHtml = `
       <div class="strip-event">
@@ -1187,17 +1201,18 @@ function renderWorkshops(data) {
           <div class="strip-event-date">${item.Skrot_Daty}</div>
           <div class="strip-event-name">${item.Tytul}</div>
         </div>
-        <span class="strip-event-spots ${stripSpotsClass}">${isSoldOut ? 'Brak' : wolneMiejsca + ' miejsc'}</span>
-        <a href="${btnStripHref}" class="${btnStripClass}">${btnStripText}</a>
+        <span class="strip-event-spots ${stripSpotsClass}">${stripSpotsLabel}</span>
+        <a href="${btnStripHref}"${btnStripTarget} class="${btnStripClass}">${btnStripText}</a>
       </div>
     `;
     stripContainer.insertAdjacentHTML('beforeend', stripHtml);
 
     // ── KARTY ZAJĘĆ ──
-    const btnClass = isSoldOut ? 'wc-btn disabled' : 'wc-btn';
-    const btnHref = isSoldOut ? 'javascript:void(0)' : '#zapis';
-    const btnText = isSoldOut ? 'Brak miejsc' : 'Zapisz się';
-    
+    const btnClass = jestTekstem ? 'wc-btn' : (isSoldOut ? 'wc-btn disabled' : 'wc-btn');
+    const btnHref = jestTekstem ? WHATSAPP_LINK : (isSoldOut ? 'javascript:void(0)' : '#zapis');
+    const btnTarget = jestTekstem ? ' target="_blank" rel="noopener"' : '';
+    const btnText = jestTekstem ? 'Napisz na WhatsApp' : (isSoldOut ? 'Brak miejsc' : 'Zapisz się');
+
     const cardHtml = `
       <div class="workshop-card">
         <div class="wc-header">
@@ -1211,14 +1226,14 @@ function renderWorkshops(data) {
           <div class="wc-who">${item.Odbiorcy} · Prowadzi: ${item.Prowadzacy}</div>
           <div class="wc-footer">
             <span class="wc-spots ${spotsClass}">${spotsText}</span>
-            <a href="${btnHref}" class="${btnClass}">${btnText}</a>
+            <a href="${btnHref}"${btnTarget} class="${btnClass}">${btnText}</a>
           </div>
         </div>
       </div>
     `;
     workshopsContainer.insertAdjacentHTML('beforeend', cardHtml);
 
-    if (!isSoldOut) {
+    if (!isSoldOut && !jestTekstem) {
       const option = document.createElement('option');
       option.value = `${item.Skrot_Daty} — ${item.Tytul}`;
       option.textContent = `${item.Skrot_Daty} — ${item.Tytul} (${spotsText})`;

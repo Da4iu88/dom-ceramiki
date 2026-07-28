@@ -390,6 +390,18 @@
     display: block;
   }
   .pe-photos.single img { grid-column: 1 / -1; height: 200px; }
+  .pe-video-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 62%; /* proporcje ok. 16:10, spójne z wysokością zdjęć */
+    grid-column: 1 / -1;
+  }
+  .pe-video-wrap iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 0;
+  }
   .pe-fallback {
     height: 130px;
     display: flex;
@@ -1272,16 +1284,25 @@ if (GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
 const PAST_EVENTS_LIMIT = 3;
 
 function pastEventCardHtml(item) {
-  // Każda pozycja to "miniaturka::link_do_pełnej_wersji" (wideo albo zdjęcie)
+  // Każda pozycja to "miniaturka::link::typ" (typ = "wideo" albo "zdjecie";
+  // starsze wpisy sprzed tej zmiany mogą mieć tylko "miniaturka::link" — traktujemy jak zdjęcie)
   const zdjecia = (item.Zdjecia || '').split(',').map(s => s.trim()).filter(Boolean);
   const photosClass = zdjecia.length <= 1 ? 'pe-photos single' : 'pe-photos';
   const photosHtml = zdjecia.length > 0
     ? `<div class="${photosClass}">${zdjecia.slice(0, 4).map(entry => {
-        const [thumb, view] = entry.split('::');
-        const linkUrl = view || thumb;
-        const thumbUrl = thumb || view;
+        const [thumb, link, typ] = entry.split('::');
+        const linkUrl = link || thumb;
+        const thumbUrl = thumb || link;
+
+        if (typ === 'wideo') {
+          // Osadzony odtwarzacz Google Drive — odtwarza się od razu w kafelku
+          return `<div class="pe-video-wrap">
+                    <iframe src="${linkUrl}" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+                  </div>`;
+        }
+
         return `<a href="${linkUrl}" target="_blank" rel="noopener">
-                  <img src="${thumbUrl}" alt="Zdjęcie/wideo z zajęć" loading="lazy"
+                  <img src="${thumbUrl}" alt="Zdjęcie z zajęć" loading="lazy"
                        onerror="this.parentElement.classList.add('pe-broken'); this.replaceWith(Object.assign(document.createElement('div'), {className:'pe-fallback', textContent:'🎬 Zobacz'}));">
                 </a>`;
       }).join('')}</div>`
@@ -1294,6 +1315,7 @@ function pastEventCardHtml(item) {
         <div class="pe-date">${item.Data}</div>
         <div class="pe-opis">${item.Opis}</div>
       </div>
+
     </div>
   `;
 }

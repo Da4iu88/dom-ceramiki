@@ -378,51 +378,57 @@
     transition: border-color 0.15s;
   }
   .past-event-card:hover { border-color: var(--clay); }
-  .pe-photos {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
+  /* Galeria zdjęć/wideo w kafelku */
+  .pe-gallery { position: relative; overflow: hidden; background: #000; }
+  .pe-track {
+    display: flex;
+    transition: transform 0.3s ease;
+    will-change: transform;
   }
-  .pe-photos img {
+  .pe-slide { flex: 0 0 100%; min-width: 100%; }
+  .pe-slide a { display: block; }
+  .pe-slide img {
     width: 100%;
-    height: 130px;
+    height: 300px;
     object-fit: cover;
     display: block;
   }
-  .pe-photos.single img { grid-column: 1 / -1; height: 200px; }
-  .pe-video-wrap {
-    position: relative;
-    width: 100%;
-    padding-top: 62%; /* proporcje ok. 16:10, spójne z wysokością zdjęć */
-    grid-column: 1 / -1;
-  }
-  .pe-video-wrap iframe {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    border: 0;
-  }
-  .pe-video-fallback {
-    grid-column: 1 / -1;
-    text-align: center;
-    font-size: 0.78rem;
-    padding: 6px 0 2px;
-  }
-  .pe-video-fallback a { color: var(--clay); font-weight: 700; text-decoration: none; }
-  .pe-video-fallback a:hover { text-decoration: underline; }
   .pe-fallback {
-    height: 130px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--clay-bg);
-    color: var(--clay);
-    font-size: 0.85rem;
-    font-weight: 700;
+    height: 300px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--clay-bg); color: var(--clay);
+    font-size: 0.9rem; font-weight: 700;
   }
+  .pe-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border: 0; border-radius: 50%;
+    background: rgba(0,0,0,0.45); color: #fff;
+    font-size: 1.4rem; line-height: 1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pe-nav.prev { left: 8px; }
+  .pe-nav.next { right: 8px; }
+  .pe-nav:hover { background: rgba(0,0,0,0.65); }
+  .pe-counter {
+    position: absolute; top: 8px; right: 10px;
+    background: rgba(0,0,0,0.5); color: #fff;
+    font-size: 0.72rem; padding: 2px 8px; border-radius: 999px;
+  }
+  .pe-dots {
+    position: absolute; bottom: 8px; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 6px;
+  }
+  .pe-dot {
+    width: 7px; height: 7px; border-radius: 50%; border: 0; padding: 0;
+    background: rgba(255,255,255,0.5); cursor: pointer;
+  }
+  .pe-dot.active { background: #fff; }
+
   .pe-body { padding: 1.1rem 1.25rem; }
   .pe-date { font-size: 0.78rem; font-weight: 700; color: var(--clay); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
   .pe-opis { font-size: 0.9rem; color: var(--ink); line-height: 1.5; }
+  .pe-akapit { margin: 0 0 0.6rem; }
+  .pe-akapit:last-child { margin-bottom: 0; }
 
   /* ─── FORM ─── */
   #zapis { background: var(--clay-bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -739,6 +745,10 @@
   @media (max-width: 700px) {
     /* reset ogólny */
     *, *::before, *::after { max-width: 100%; }
+
+    /* zajęcia, które się odbyły — większe zdjęcia na telefonie */
+    .past-events-grid { grid-template-columns: 1fr; }
+    .pe-slide img, .pe-fallback { height: 380px; }
 
     section { padding: 2.5rem 1rem; }
     .container { padding: 0 1rem; }
@@ -1291,51 +1301,122 @@ if (GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
 // ── RENDEROWANIE ZAJĘĆ, KTÓRE SIĘ ODBYŁY ──
 const PAST_EVENTS_LIMIT = 3;
 
-function pastEventCardHtml(item) {
-  // Każda pozycja to "miniaturka::link::typ" (typ = "wideo" albo "zdjecie";
-  // starsze wpisy sprzed tej zmiany mogą mieć tylko "miniaturka::link" — traktujemy jak zdjęcie)
-  const zdjecia = (item.Zdjecia || '').split(',').map(s => s.trim()).filter(Boolean);
-  const photosClass = zdjecia.length <= 1 ? 'pe-photos single' : 'pe-photos';
-  const photosHtml = zdjecia.length > 0
-    ? `<div class="${photosClass}">${zdjecia.slice(0, 4).map(entry => {
-        const [thumb, link, typ] = entry.split('::');
-        const linkUrl = link || thumb;
-        const thumbUrl = thumb || link;
+// Grupuje wpisy o tej samej dacie w jeden kafelek:
+// zdjęcia trafiają do wspólnej galerii, teksty łączone jako kolejne akapity
+function grupujPoDacie(rows) {
+  const mapa = new Map();
+  rows.forEach(item => {
+    const data = (item.Data || '').trim();
+    if (!mapa.has(data)) mapa.set(data, { Data: data, opisy: [], media: [] });
+    const grupa = mapa.get(data);
 
-        if (typ === 'wideo') {
-          // Osadzony odtwarzacz Google Drive — na części telefonów obraz czasem
-          // nie renderuje się w ramce (dźwięk i pasek postępu działają, ale ekran
-          // jest czarny — to ograniczenie odtwarzacza Google, nie strony). Dlatego
-          // dajemy dodatkowo zapasowy link otwierający wideo w nowej karcie/aplikacji.
-          const linkOtworz = linkUrl.replace('/preview', '/view');
-          return `<div class="pe-video-wrap">
-                    <iframe src="${linkUrl}"
-                            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                            allowfullscreen webkitallowfullscreen mozallowfullscreen
-                            loading="lazy"></iframe>
-                  </div>
-                  <div class="pe-video-fallback">
-                    <a href="${linkOtworz}" target="_blank" rel="noopener">Nie widać wideo? Otwórz w nowej karcie →</a>
-                  </div>`;
-        }
+    const opis = (item.Opis || '').trim();
+    if (opis) grupa.opisy.push(opis);
 
-        return `<a href="${linkUrl}" target="_blank" rel="noopener">
-                  <img src="${thumbUrl}" alt="Zdjęcie z zajęć" loading="lazy"
-                       onerror="this.parentElement.classList.add('pe-broken'); this.replaceWith(Object.assign(document.createElement('div'), {className:'pe-fallback', textContent:'🎬 Zobacz'}));">
-                </a>`;
-      }).join('')}</div>`
+    (item.Zdjecia || '').split(',').map(s => s.trim()).filter(Boolean)
+      .forEach(entry => grupa.media.push(entry));
+  });
+  return [...mapa.values()];
+}
+
+function mediaHtml(entry, indeks) {
+  // Format wpisu: "miniaturka::link::typ" (starsze wpisy bez typu = zdjęcie)
+  const [thumb, link, typ] = entry.split('::');
+  const linkUrl = link || thumb;
+  const thumbUrl = thumb || link;
+
+  if (typ === 'wideo') {
+    const linkOtworz = linkUrl.replace('/preview', '/view');
+    return `<div class="pe-slide" data-index="${indeks}">
+              <div class="pe-video-wrap">
+                <iframe src="${linkUrl}"
+                        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                        allowfullscreen webkitallowfullscreen mozallowfullscreen
+                        loading="lazy"></iframe>
+              </div>
+              <div class="pe-video-fallback">
+                <a href="${linkOtworz}" target="_blank" rel="noopener">Nie widać wideo? Otwórz w nowej karcie →</a>
+              </div>
+            </div>`;
+  }
+
+  return `<div class="pe-slide" data-index="${indeks}">
+            <a href="${linkUrl}" target="_blank" rel="noopener">
+              <img src="${thumbUrl}" alt="Zdjęcie z zajęć" loading="lazy"
+                   onerror="this.replaceWith(Object.assign(document.createElement('div'), {className:'pe-fallback', textContent:'🎬 Zobacz'}));">
+            </a>
+          </div>`;
+}
+
+function pastEventCardHtml(grupa, idKarty) {
+  const media = grupa.media;
+  const opisHtml = grupa.opisy.length > 0
+    ? grupa.opisy.map(t => `<p class="pe-akapit">${t}</p>`).join('')
     : '';
+
+  let galeriaHtml = '';
+  if (media.length === 1) {
+    galeriaHtml = `<div class="pe-gallery">${mediaHtml(media[0], 0)}</div>`;
+  } else if (media.length > 1) {
+    const kropki = media.map((_, i) =>
+      `<button type="button" class="pe-dot${i === 0 ? ' active' : ''}" data-go="${i}" aria-label="Zdjęcie ${i + 1}"></button>`
+    ).join('');
+
+    galeriaHtml = `
+      <div class="pe-gallery" data-gallery="${idKarty}">
+        <div class="pe-track">${media.map((m, i) => mediaHtml(m, i)).join('')}</div>
+        <button type="button" class="pe-nav prev" data-dir="-1" aria-label="Poprzednie">‹</button>
+        <button type="button" class="pe-nav next" data-dir="1" aria-label="Następne">›</button>
+        <div class="pe-counter"><span class="pe-current">1</span>/${media.length}</div>
+        <div class="pe-dots">${kropki}</div>
+      </div>`;
+  }
 
   return `
     <div class="past-event-card">
-      ${photosHtml}
+      ${galeriaHtml}
       <div class="pe-body">
-        <div class="pe-date">${item.Data}</div>
-        <div class="pe-opis">${item.Opis}</div>
+        <div class="pe-date">${grupa.Data}</div>
+        <div class="pe-opis">${opisHtml}</div>
       </div>
-
     </div>
   `;
+}
+
+// Obsługa przewijania galerii (strzałki + kropki + gest przeciągnięcia)
+function podepnijGalerie(scope) {
+  scope.querySelectorAll('.pe-gallery[data-gallery]').forEach(gal => {
+    if (gal.dataset.bound) return;
+    gal.dataset.bound = '1';
+
+    const track = gal.querySelector('.pe-track');
+    const slides = gal.querySelectorAll('.pe-slide');
+    const dots = gal.querySelectorAll('.pe-dot');
+    const licznik = gal.querySelector('.pe-current');
+    let aktualny = 0;
+
+    function pokaz(i) {
+      aktualny = Math.max(0, Math.min(i, slides.length - 1));
+      track.style.transform = `translateX(-${aktualny * 100}%)`;
+      dots.forEach((d, di) => d.classList.toggle('active', di === aktualny));
+      if (licznik) licznik.textContent = aktualny + 1;
+    }
+
+    gal.querySelectorAll('.pe-nav').forEach(btn => {
+      btn.addEventListener('click', () => pokaz(aktualny + parseInt(btn.dataset.dir)));
+    });
+    dots.forEach(d => d.addEventListener('click', () => pokaz(parseInt(d.dataset.go))));
+
+    // Przeciąganie palcem na telefonie
+    let startX = null;
+    track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', e => {
+      if (startX === null) return;
+      const delta = e.changedTouches[0].clientX - startX;
+      if (Math.abs(delta) > 40) pokaz(aktualny + (delta < 0 ? 1 : -1));
+      startX = null;
+    }, { passive: true });
+  });
 }
 
 function renderPastEvents(data) {
@@ -1345,16 +1426,18 @@ function renderPastEvents(data) {
   moreWrap.innerHTML = '';
 
   // Ostatni przesłany mail = ostatni wiersz w arkuszu = pierwszy kafelek na stronie
-  const ordered = [...data].reverse();
+  const ordered = grupujPoDacie([...data].reverse());
   const widoczne = ordered.slice(0, PAST_EVENTS_LIMIT);
   const reszta = ordered.slice(PAST_EVENTS_LIMIT);
 
-  widoczne.forEach(item => container.insertAdjacentHTML('beforeend', pastEventCardHtml(item)));
+  widoczne.forEach((g, i) => container.insertAdjacentHTML('beforeend', pastEventCardHtml(g, 'g' + i)));
+  podepnijGalerie(container);
 
   if (reszta.length > 0) {
     moreWrap.innerHTML = `<button type="button" class="wc-btn" id="pe-more-btn">Zobacz poprzednie zajęcia (${reszta.length})</button>`;
     document.getElementById('pe-more-btn').addEventListener('click', () => {
-      reszta.forEach(item => container.insertAdjacentHTML('beforeend', pastEventCardHtml(item)));
+      reszta.forEach((g, i) => container.insertAdjacentHTML('beforeend', pastEventCardHtml(g, 'r' + i)));
+      podepnijGalerie(container);
       moreWrap.innerHTML = '';
     }, { once: true });
   }

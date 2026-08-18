@@ -298,6 +298,12 @@
   .strip-event-spots.few { background: var(--moss); }
   .strip-event-spots.none { background: var(--moss); }
   .strip-event-spots.custom { background: var(--clay); }
+  .strip-event-spots.custom[href] {
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .strip-event-spots.custom[href]:hover,
+  .strip-event-spots.custom[href]:focus-visible { background: #a8562d; }
 
   /* przycisk "Zapisz się" w stripie */
   .strip-event-btn {
@@ -371,6 +377,12 @@
   .wc-spots.few { color: var(--clay); }
   .wc-spots.none { color: var(--muted); }
   .wc-spots.custom { color: var(--clay); }
+  .wc-spots.custom[href] {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .wc-spots.custom[href]:hover,
+  .wc-spots.custom[href]:focus-visible { color: #a8562d; }
   .wc-btn {
     font-size: 0.82rem;
     font-weight: 700;
@@ -1414,7 +1426,7 @@ function renderWorkshops(data) {
     const rawWolne = (item.Wolne_Miejsca || '').trim();
     const wolneMiejsca = parseInt(rawWolne);
     // Jeśli w kolumnie jest tekst zamiast liczby (np. "Zapytaj o miejsca"),
-    // pokazujemy go jako klikalny link do WhatsApp zamiast "Brak miejsc"
+    // pokazujemy go jako link do formularza zamiast "Brak miejsc"
     const jestTekstem = rawWolne !== '' && isNaN(wolneMiejsca);
 
     let spotsClass = 'ok';
@@ -1451,6 +1463,10 @@ function renderWorkshops(data) {
     const btnStripTarget = jestTekstem ? ' target="_blank" rel="noopener"' : '';
     const btnStripText = jestTekstem ? IKONA_WHATSAPP + '<span>Napisz na WhatsApp</span>' : (isSoldOut ? 'Brak miejsc' : 'Zapisz się');
     const stripSpotsLabel = jestTekstem ? rawWolne : (isSoldOut ? 'Brak' : wolneMiejsca + ' miejsc');
+    const wartoscZajec = `${item.Skrot_Daty} — ${item.Tytul}`;
+    const stripSpotsHtml = jestTekstem
+      ? `<a href="#zapis" class="strip-event-spots ${stripSpotsClass}" aria-label="Przejdź do formularza zapisu">${stripSpotsLabel}</a>`
+      : `<span class="strip-event-spots ${stripSpotsClass}">${stripSpotsLabel}</span>`;
 
     const stripHtml = `
       <div class="strip-event">
@@ -1458,7 +1474,7 @@ function renderWorkshops(data) {
           <div class="strip-event-date">${item.Skrot_Daty}</div>
           <div class="strip-event-name">${item.Tytul}</div>
         </div>
-        <span class="strip-event-spots ${stripSpotsClass}">${stripSpotsLabel}</span>
+        ${stripSpotsHtml}
         <a href="${btnStripHref}"${btnStripTarget} class="${btnStripClass}">${btnStripText}</a>
       </div>
     `;
@@ -1469,6 +1485,9 @@ function renderWorkshops(data) {
     const btnHref = jestTekstem ? WHATSAPP_LINK : (isSoldOut ? 'javascript:void(0)' : '#zapis');
     const btnTarget = jestTekstem ? ' target="_blank" rel="noopener"' : '';
     const btnText = jestTekstem ? IKONA_WHATSAPP + '<span>Napisz na WhatsApp</span>' : (isSoldOut ? 'Brak miejsc' : 'Zapisz się');
+    const spotsHtml = jestTekstem
+      ? `<a href="#zapis" class="wc-spots ${spotsClass}" aria-label="Przejdź do formularza zapisu">${spotsText}</a>`
+      : `<span class="wc-spots ${spotsClass}">${spotsText}</span>`;
 
     const cardHtml = `
       <div class="workshop-card">
@@ -1482,7 +1501,7 @@ function renderWorkshops(data) {
           <div class="wc-title">${item.Tytul}</div>
           <div class="wc-who">${item.Odbiorcy} · Prowadzi: ${item.Prowadzacy}</div>
           <div class="wc-footer">
-            <span class="wc-spots ${spotsClass}">${spotsText}</span>
+            ${spotsHtml}
             <a href="${btnHref}"${btnTarget} class="${btnClass}">${btnText}</a>
           </div>
         </div>
@@ -1497,7 +1516,7 @@ function renderWorkshops(data) {
         ? rawWolne.replace(/[\s>→-]+$/, '')   // ucina strzałkę z końca, np. "zapytaj o miejsca ->"
         : spotsText;
       const option = document.createElement('option');
-      option.value = `${item.Skrot_Daty} — ${item.Tytul}`;
+      option.value = wartoscZajec;
       option.textContent = `${item.Skrot_Daty} — ${item.Tytul} (${opisMiejsc})`;
       selectElement.appendChild(option);
     }
@@ -1935,7 +1954,7 @@ const PRIVACY_POLICY_STATIC = `
 <p>Aby skorzystać z tych praw, napisz na adres: <a href="mailto:ceramikazatorze@gmail.com">ceramikazatorze@gmail.com</a></p>
 
 <h4>Pliki cookies</h4>
-<p>Strona <strong>nie używa plików cookies śledzących ani analitycznych</strong>. Nie korzystamy z Google Analytics ani żadnych narzędzi reklamowych. Jedyne zewnętrzne zasoby to czcionki Google Fonts (ładowane przy otwieraniu strony).</p>
+<p>Strona <strong>nie używa plików cookies śledzących ani analitycznych</strong>. Nie korzystamy z Google Analytics ani żadnych narzędzi reklamowych. Korzystamy z usług Google: Google Fonts do wyświetlania czcionek, Google Sheets do pobierania aktualnych informacji o zajęciach, potrzebach pracowni i zespole oraz Google Maps do wyświetlania mapy dojazdu. Podczas wczytywania tych usług Google może otrzymywać dane techniczne, takie jak adres IP, typ przeglądarki i urządzenia, data i czas żądania oraz adres strony odsyłającej. Więcej informacji znajduje się w <a href="https://policies.google.com/privacy?hl=pl" target="_blank" rel="noopener">Polityce prywatności Google</a>.</p>
 
 <p style="margin-top:1.25rem; font-size:0.8rem; color:#a09080;"><em>Polityka obowiązuje od: czerwiec 2026. Administrator zastrzega sobie prawo do jej aktualizacji.</em></p>
 `;
